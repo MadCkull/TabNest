@@ -1,17 +1,15 @@
 chrome.runtime.onInstalled.addListener(() => {
-    console.log("Session Saver installed and ready to save sessions!");
+    console.log("TabNest installed and ready to save sessions!");
 });
 
-// Function to save the current session
-async function saveSession() {
+async function saveSession(name) {
     const windows = await chrome.windows.getAll({ populate: true });
     const sessionTabs = windows.flatMap(window => window.tabs.map(tab => ({
         title: tab.title,
         url: tab.url
     })));
 
-    const sessionName = `Session - ${new Date().toLocaleString()}`;
-    const session = { name: sessionName, tabs: sessionTabs };
+    const session = { name, tabs: sessionTabs, created: new Date().toISOString() };
 
     chrome.storage.local.get("sessions", (data) => {
         const sessions = data.sessions || [];
@@ -20,10 +18,9 @@ async function saveSession() {
     });
 }
 
-// Listen for messages to save the session
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "saveSession") {
-        saveSession();
-        sendResponse({}); // Send an empty response
+        saveSession(request.name);
+        sendResponse({});
     }
 });

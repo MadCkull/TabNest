@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Session Saver",
+  "name": "TabNest",
   "version": "1.0",
   "description": "Save and restore your Chrome sessions.",
-  "permissions": ["tabs", "storage"],
+  "permissions": ["tabs", "storage", "downloads"],
   "background": {
     "service_worker": "background.js"
   },

@@ -22,6 +22,12 @@ h2 {
   color: #9d4edd;
 }
 
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
 button {
   background-color: #7b2cbf;
   color: #ffffff;
@@ -30,11 +36,13 @@ button {
   font-size: 14px;
   cursor: pointer;
   border-radius: 5px;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
 }
 
 button:hover {
   background-color: #9d4edd;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .sessions-container {
@@ -49,14 +57,34 @@ button:hover {
 }
 
 #sessions-list li {
+  background: rgba(60, 60, 76, 0.6);
+  border-radius: 5px;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+#sessions-list li .session-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(60, 60, 76, 0.6);
   padding: 8px 12px;
-  margin-bottom: 8px;
-  border-radius: 5px;
-  font-size: 14px;
+  cursor: pointer;
+}
+
+#sessions-list li .session-details {
+  display: none;
+  padding: 8px 12px;
+  background: rgba(40, 40, 56, 0.8);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+#sessions-list li.expanded .session-details {
+  display: block;
+}
+
+#sessions-list li:hover {
+  transform: translateX(5px);
 }
 
 #sessions-list button {
@@ -106,8 +134,42 @@ button:hover {
 .context-menu li {
   padding: 8px 15px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .context-menu li:hover {
   background-color: #5a189a;
+}
+
+.context-menu li[data-action="delete"] {
+  color: #ff4d4d;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+#sessions-list li {
+  animation: fadeIn 0.3s ease;
+}
+
+#sessions-list li.new-session {
+  animation: slideIn 0.3s ease;
 }

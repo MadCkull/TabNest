@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Session Saver</title>
+    <title>TabNest</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
       rel="stylesheet"
@@ -12,13 +12,23 @@
   </head>
   <body>
     <div class="container">
-      <h1>Session Saver</h1>
-      <button id="save-session">Save Current Session</button>
+      <h1>TabNest</h1>
+      <div class="button-group">
+        <button id="save-session">Save Current Session</button>
+        <button id="import-sessions">Import</button>
+        <button id="export-sessions">Export</button>
+      </div>
       <h2>Saved Sessions</h2>
       <div class="sessions-container">
         <ul id="sessions-list"></ul>
       </div>
     </div>
+    <input
+      type="file"
+      id="file-input"
+      accept=".TabNest"
+      style="display: none"
+    />
     <script src="popup.js"></script>
   </body>
 </html>
