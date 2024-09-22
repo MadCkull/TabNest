@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const listItem = document.createElement("li");
         listItem.innerHTML = `
             <div class="session-header">
+                <input type="checkbox" class="session-checkbox" id="session-${index}">
                 <span>${session.name}</span>
                 <button class="open-button">Open</button>
             </div>
@@ -47,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         openButton.addEventListener("click", (e) => openSession(e, session));
 
         listItem.querySelector(".session-header").addEventListener("click", (e) => {
-            if (e.target !== openButton) {
+            if (e.target !== openButton && !e.target.classList.contains("session-checkbox")) {
                 listItem.classList.toggle("expanded");
             }
         });
@@ -148,17 +149,62 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    let isExporting = false;
+
     function exportSessions() {
-        chrome.storage.local.get("sessions", (data) => {
-            const sessions = data.sessions || [];
-            const blob = new Blob([JSON.stringify(sessions, null, 2)], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            chrome.downloads.download({
-                url: url,
-                filename: "tabnest_sessions.TabNest",
-                saveAs: true
+        const checkboxes = document.querySelectorAll('.session-checkbox');
+        const openButton = document.querySelectorAll('.open-button');
+
+        if (!isExporting) {
+            // First click: Show checkboxes and change button text
+            checkboxes.forEach(checkbox => {
+                checkbox.style.display = 'inline';
             });
+            openButton.forEach(openButton => {
+                openButton.style.display = 'none';
+            });
+            document.getElementById('export-sessions').innerHTML = "Done";
+            isExporting = true; // Set flag to indicate the button is in "Done" mode
+        } else {
+            // Second click: Export selected sessions
+            const selectedCheckboxes = document.querySelectorAll('.session-checkbox:checked');
+            const selectedIndices = Array.from(selectedCheckboxes).map(checkbox =>
+                parseInt(checkbox.id.split('-')[1])
+            );
+
+            if (selectedIndices.length === 0) {
+                ResetExportButton()
+                return;
+            }
+
+            chrome.storage.local.get("sessions", (data) => {
+                const sessions = data.sessions || [];
+                const selectedSessions = selectedIndices.map(index => sessions[sessions.length - 1 - index]);
+                const blob = new Blob([JSON.stringify(selectedSessions, null, 2)], { type: "application/octet-stream" });
+                const url = URL.createObjectURL(blob);
+                chrome.downloads.download({
+                    url: url,
+                    filename: "tabnest_sessions.TabNest",
+                    saveAs: true
+                });
+                ResetExportButton()
+            });
+        }
+    }
+
+
+    // Reset button and state
+    function ResetExportButton() {
+        const checkboxes = document.querySelectorAll('.session-checkbox');
+        const openButton = document.querySelectorAll('.open-button');
+        checkboxes.forEach(checkbox => {
+            checkbox.style.display = 'none';
         });
+        openButton.forEach(openButton => {
+            openButton.style.display = 'inline';
+        });
+        document.getElementById('export-sessions').innerHTML = "Export";
+        isExporting = false;
     }
 
     loadSessions();

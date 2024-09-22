@@ -53,6 +53,7 @@ button:hover {
 
 #sessions-list {
   list-style-type: none;
+  overflow: hidden;
   padding: 0;
 }
 
@@ -60,6 +61,8 @@ button:hover {
   background: rgba(60, 60, 76, 0.6);
   border-radius: 5px;
   margin-bottom: 8px;
+  margin-right: 10px;
+  margin-left: 4px;
   transition: all 0.3s ease;
 }
 
@@ -172,4 +175,22 @@ button:hover {
 
 #sessions-list li.new-session {
   animation: slideIn 0.3s ease;
+}
+
+.session-checkbox {
+  display: none;
+  margin-right: 10px;
+}
+
+#sessions-list li .session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+#sessions-list li .session-header span {
+  flex-grow: 1;
+  margin-right: 10px;
 }
