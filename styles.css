@@ -35,7 +35,7 @@ button {
   padding: 8px 16px;
   font-size: 14px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 20px;
   transition: all 0.3s ease;
 }
 
@@ -177,11 +177,6 @@ button:hover {
   animation: slideIn 0.3s ease;
 }
 
-.session-checkbox {
-  display: none;
-  margin-right: 10px;
-}
-
 #sessions-list li .session-header {
   display: flex;
   justify-content: space-between;
@@ -193,4 +188,52 @@ button:hover {
 #sessions-list li .session-header span {
   flex-grow: 1;
   margin-right: 10px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.import-export-button {
+  position: relative;
+  width: 130px;
+  height: 35px;
+  border-radius: 20px;
+}
+
+.import-export-button button {
+  position: absolute;
+  width: 55%;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+#import-sessions {
+  left: 0;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+}
+
+#export-sessions {
+  right: 0;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.import-export-button button:hover {
+  background-color: #7a2cbfd4;
+}
+.import-export-button #export-sessions:hover {
+  transform: translate(3px, 2px);
+}
+.import-export-button #import-sessions:hover {
+  transform: translate(-3px, -2px);
 }
