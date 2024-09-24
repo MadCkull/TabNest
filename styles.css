@@ -1,9 +1,26 @@
+/* Force iframe transparency */
+html,
+body {
+  background-color: transparent !important;
+}
+
 body {
   font-family: "Roboto", sans-serif;
-  background-color: #1a1a2e;
+  background: rgba(255, 255, 255, 0.5); /* Adjust alpha for transparency */
+  margin: 0;
+  padding: 0;
   color: #e0e0e0;
   margin: 0;
   padding: 10px;
+  border-radius: 50px;
+  overflow: visible !important;
+}
+
+.transparent-popup {
+  background: rgba(255, 255, 255, 0); /* Fully transparent */
+  backdrop-filter: blur(
+    8px
+  ); /* Optional: adds a blur effect to the background */
 }
 
 .container {
@@ -13,7 +30,7 @@ body {
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 h1,
