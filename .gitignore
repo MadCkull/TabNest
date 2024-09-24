@@ -1,0 +1,3 @@
+# Ignore TabNest.crx and TabNestKey.pem
+PackedExtention/TabNest.crx
+PackedExtention/TabNestKey.pem
