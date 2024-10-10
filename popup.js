@@ -7,19 +7,21 @@ document.addEventListener("DOMContentLoaded", () => {
     let contextMenu;
     let sessionCounter = 0;
 
-    saveSessionButton.addEventListener("click", saveSession);
+    saveSessionButton.addEventListener("click", (event) => {
+        saveSession(event);
+    });
     importButton.addEventListener("click", () => fileInput.click());
     exportButton.addEventListener("click", exportSessions);
     fileInput.addEventListener("change", importSessions);
 
-    function saveSession() {
+    function saveSession(event) {
         chrome.storage.local.get("sessions", (data) => {
             const sessions = data.sessions || [];
             sessionCounter = sessions.length + 1;
             const sessionName = `Session ${String(sessionCounter).padStart(3, '0')}`;
 
-            chrome.runtime.sendMessage({ action: "saveSession", name: sessionName }, () => {
-                loadSessions();
+            chrome.runtime.sendMessage({ action: "saveSession", name: sessionName, ctrlKey: event.ctrlKey }, () => {
+                loadSessions(); // Load sessions after saving
             });
         });
     }
@@ -39,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const listItem = document.createElement("li");
         listItem.innerHTML = `
             <div class="session-header">
-            
                 <div class="checkbox-wrapper-12">
                     <div class="cbx">
                         <input id="session-${index}" type="checkbox" class="session-checkbox" />
@@ -114,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     }
-
 
     function showContextMenu(e, index) {
         e.preventDefault();
@@ -198,7 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const openButton = document.querySelectorAll('.open-button');
 
         if (!isExporting) {
-            // First click: Show checkboxes and change button text
             checkboxes.forEach(checkbox => {
                 checkbox.style.display = 'inline';
             });
@@ -208,14 +207,13 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('export-sessions').innerHTML = "Done";
             isExporting = true; // Set flag to indicate the button is in "Done" mode
         } else {
-            // Second click: Export selected sessions
             const selectedCheckboxes = document.querySelectorAll('.session-checkbox:checked');
             const selectedIndices = Array.from(selectedCheckboxes).map(checkbox =>
                 parseInt(checkbox.id.split('-')[1])
             );
 
             if (selectedIndices.length === 0) {
-                ResetExportButton()
+                ResetExportButton();
                 return;
             }
 
@@ -229,11 +227,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     filename: "tabnest_sessions.TabNest",
                     saveAs: true
                 });
-                ResetExportButton()
+                ResetExportButton();
             });
         }
     }
-
 
     // Reset button and state
     function ResetExportButton() {
@@ -249,5 +246,13 @@ document.addEventListener("DOMContentLoaded", () => {
         isExporting = false;
     }
 
+    // Load sessions initially
     loadSessions();
+
+    // Listen for refresh messages
+    chrome.runtime.onMessage.addListener((request) => {
+        if (request.action === "refreshSessions") {
+            loadSessions(); // Refresh the sessions list
+        }
+    });
 });
